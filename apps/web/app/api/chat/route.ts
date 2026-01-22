@@ -21,11 +21,56 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // episodeId is actually characterId in the current implementation
+    // First, find or create an episode for this character
+    const characterId = episodeId;
+
+    let episode = await prisma.episode.findFirst({
+      where: {
+        characterId: characterId,
+      },
+      include: {
+        character: true,
+      },
+    });
+
+    // If no episode exists for this character, create one
+    if (!episode) {
+      const character = await prisma.character.findUnique({
+        where: { id: characterId },
+      });
+
+      if (!character) {
+        return NextResponse.json(
+          { error: 'Character not found' },
+          { status: 404 }
+        );
+      }
+
+      // Create a default episode for this character
+      episode = await prisma.episode.create({
+        data: {
+          characterId: characterId,
+          title: `${character.name}와의 첫 만남`,
+          description: `${character.name}와 처음으로 만나는 설레는 순간`,
+          category: 'DAILY',
+          difficulty: 'EASY',
+          introVideoUrl: '',
+          videoPoolIds: [],
+          baseStory: `${character.name}와의 새로운 이야기가 시작됩니다.`,
+          branchPoints: [],
+        },
+        include: {
+          character: true,
+        },
+      });
+    }
+
     // Find or create chat session
     let session = await prisma.chatSession.findFirst({
       where: {
         userId,
-        episodeId,
+        episodeId: episode.id,
         status: 'ACTIVE',
       },
       include: {
@@ -38,18 +83,6 @@ export async function POST(request: NextRequest) {
     });
 
     if (!session) {
-      // Get episode and character info for new session
-      const episode = await prisma.episode.findUnique({
-        where: { id: episodeId },
-        include: { character: true },
-      });
-
-      if (!episode) {
-        return NextResponse.json(
-          { error: 'Episode not found' },
-          { status: 404 }
-        );
-      }
 
       // Create new session
       session = await prisma.chatSession.create({

@@ -71,10 +71,12 @@ export default function ChatPage() {
   const handleSendMessage = async () => {
     if (!inputMessage.trim() || isLoading || !character) return;
 
+    const messageContent = inputMessage.trim();
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
-      content: inputMessage,
+      content: messageContent,
       timestamp: new Date().toISOString(),
     };
 
@@ -86,8 +88,9 @@ export default function ChatPage() {
       // TODO: Get actual userId from Clerk auth
       const userId = 'temp-user-id';
 
-      // TODO: Get or create episode for this character
-      const episodeId = 'temp-episode-id';
+      // Use character ID as episode ID for now
+      // In a real app, you'd fetch the actual episode
+      const episodeId = characterId;
 
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -97,7 +100,7 @@ export default function ChatPage() {
         body: JSON.stringify({
           userId,
           episodeId,
-          message: inputMessage,
+          message: messageContent,
         }),
       });
 
