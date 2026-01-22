@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
       session = await prisma.chatSession.create({
         data: {
           userId,
-          episodeId,
+          episodeId: episode.id,
           messages: [],
           relationshipScore: 0,
           emotionalState: {
