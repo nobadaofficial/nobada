@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import type { ChatSession, Episode, Character } from '@prisma/client';
 
+// Force this route to be included in the build
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 type SessionWithRelations = ChatSession & {
   episode: Episode & {
     character: Character;
