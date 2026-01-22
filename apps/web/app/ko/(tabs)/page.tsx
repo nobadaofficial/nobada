@@ -2,6 +2,9 @@ import { HomeFeed } from '@/components/home/HomeFeed';
 import { CharacterClipData } from '@/components/home/CharacterClip';
 import { prisma } from '@/lib/prisma';
 
+// Force dynamic rendering to avoid build-time database access
+export const dynamic = 'force-dynamic';
+
 async function getInitialClips(): Promise<{
   clips: CharacterClipData[];
   nextCursor: string | null;
