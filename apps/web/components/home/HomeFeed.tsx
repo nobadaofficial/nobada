@@ -239,6 +239,26 @@ export function HomeFeed({ initialData }: HomeFeedProps) {
     setIsMuted((prev) => !prev);
   }, []);
 
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isAnimating.current || isDraggingRef.current) return;
+
+      if (e.key === 'ArrowDown' && currentIndex < clips.length - 1) {
+        e.preventDefault();
+        isAnimating.current = true;
+        animateToPosition(1, 'next');
+      } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+        e.preventDefault();
+        isAnimating.current = true;
+        animateToPosition(-1, 'prev');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentIndex, clips.length, animateToPosition]);
+
   if (loading) {
     return (
       <div className="h-dvh bg-black flex items-center justify-center">

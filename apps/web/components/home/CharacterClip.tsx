@@ -68,7 +68,7 @@ export function CharacterClip({
       <video
         ref={videoRef}
         src={clip.videoUrl}
-        poster={clip.thumbnailUrl}
+        preload="metadata"
         loop
         muted={isMuted}
         playsInline
