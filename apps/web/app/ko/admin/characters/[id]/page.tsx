@@ -5,18 +5,26 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Save, Trash2 } from 'lucide-react';
 
+interface PersonalityTraits {
+  openness: number;
+  warmth: number;
+  playfulness: number;
+  mysteriousness: number;
+}
+
 interface Character {
   id: string;
   name: string;
   age: number;
   occupation: string;
-  personality: string;
-  background: string;
-  greetingMessage: string;
-  exampleDialogues: string[];
+  description: string;
+  backstory: string;
+  voiceId: string;
+  personality: PersonalityTraits;
   tags: string[];
   profileImage: string;
   thumbnailUrl: string;
+  previewVideoUrl?: string;
   isPublished: boolean;
   isNew: boolean;
   isTrending: boolean;
@@ -43,12 +51,7 @@ export default function EditCharacterPage() {
       }
 
       const data = await response.json();
-      setFormData({
-        ...data.character,
-        exampleDialogues: data.character.exampleDialogues?.length
-          ? data.character.exampleDialogues
-          : ['', '', ''],
-      });
+      setFormData(data.character);
     } catch (error) {
       console.error('Error fetching character:', error);
       alert('캐릭터를 불러오는데 실패했습니다.');
@@ -70,10 +73,7 @@ export default function EditCharacterPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          exampleDialogues: formData.exampleDialogues.filter(d => d.trim()),
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
@@ -144,12 +144,16 @@ export default function EditCharacterPage() {
     });
   };
 
-  const handleExampleDialogueChange = (index: number, value: string) => {
+  const handlePersonalityChange = (trait: keyof PersonalityTraits, value: number) => {
     if (!formData) return;
 
-    const newDialogues = [...formData.exampleDialogues];
-    newDialogues[index] = value;
-    setFormData(prev => prev ? { ...prev, exampleDialogues: newDialogues } : null);
+    setFormData(prev => prev ? {
+      ...prev,
+      personality: {
+        ...prev.personality,
+        [trait]: value,
+      },
+    } : null);
   };
 
   if (isLoading) {
@@ -286,6 +290,19 @@ export default function EditCharacterPage() {
                   className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  프리뷰 비디오 URL
+                </label>
+                <input
+                  type="url"
+                  name="previewVideoUrl"
+                  value={formData.previewVideoUrl || ''}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
+                />
+              </div>
             </div>
           </div>
 
@@ -295,11 +312,11 @@ export default function EditCharacterPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  성격 *
+                  설명 *
                 </label>
                 <textarea
-                  name="personality"
-                  value={formData.personality}
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
                   required
                   rows={3}
@@ -312,8 +329,8 @@ export default function EditCharacterPage() {
                   배경 스토리 *
                 </label>
                 <textarea
-                  name="background"
-                  value={formData.background}
+                  name="backstory"
+                  value={formData.backstory}
                   onChange={handleChange}
                   required
                   rows={4}
@@ -323,41 +340,78 @@ export default function EditCharacterPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  첫 인사 메시지 *
+                  음성 ID
                 </label>
-                <textarea
-                  name="greetingMessage"
-                  value={formData.greetingMessage}
+                <input
+                  type="text"
+                  name="voiceId"
+                  value={formData.voiceId}
                   onChange={handleChange}
-                  required
-                  rows={2}
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B] resize-none"
+                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
                 />
               </div>
             </div>
           </div>
 
-          {/* Example Dialogues */}
+          {/* Personality Traits */}
           <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
-            <h2 className="text-lg font-bold text-white mb-4">
-              대화 예시 (선택사항)
-            </h2>
+            <h2 className="text-lg font-bold text-white mb-4">성격 특성 (0-100)</h2>
             <div className="space-y-4">
-              {formData.exampleDialogues.map((dialogue, index) => (
-                <div key={index}>
-                  <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                    예시 {index + 1}
-                  </label>
-                  <textarea
-                    value={dialogue}
-                    onChange={(e) =>
-                      handleExampleDialogueChange(index, e.target.value)
-                    }
-                    rows={2}
-                    className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B] resize-none"
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  개방성 (Openness): {formData.personality.openness}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={formData.personality.openness}
+                  onChange={(e) => handlePersonalityChange('openness', parseInt(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  따뜻함 (Warmth): {formData.personality.warmth}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={formData.personality.warmth}
+                  onChange={(e) => handlePersonalityChange('warmth', parseInt(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  장난기 (Playfulness): {formData.personality.playfulness}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={formData.personality.playfulness}
+                  onChange={(e) => handlePersonalityChange('playfulness', parseInt(e.target.value))}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  신비로움 (Mysteriousness): {formData.personality.mysteriousness}
+                </label>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={formData.personality.mysteriousness}
+                  onChange={(e) => handlePersonalityChange('mysteriousness', parseInt(e.target.value))}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 

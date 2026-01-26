@@ -12,13 +12,17 @@ export default function NewCharacterPage() {
     name: '',
     age: '',
     occupation: '',
-    personality: '',
-    background: '',
-    greetingMessage: '',
-    exampleDialogues: ['', '', ''],
+    description: '',
+    backstory: '',
+    voiceId: 'default',
+    personalityOpenness: '50',
+    personalityWarmth: '50',
+    personalityPlayfulness: '50',
+    personalityMysteriousness: '50',
     tags: '',
     profileImage: '',
     thumbnailUrl: '',
+    previewVideoUrl: '',
     isPublished: false,
     isNew: true,
     isTrending: false,
@@ -35,10 +39,25 @@ export default function NewCharacterPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          name: formData.name,
           age: parseInt(formData.age),
+          occupation: formData.occupation,
+          description: formData.description,
+          backstory: formData.backstory,
+          voiceId: formData.voiceId,
+          personality: {
+            openness: parseInt(formData.personalityOpenness),
+            warmth: parseInt(formData.personalityWarmth),
+            playfulness: parseInt(formData.personalityPlayfulness),
+            mysteriousness: parseInt(formData.personalityMysteriousness),
+          },
           tags: formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
-          exampleDialogues: formData.exampleDialogues.filter(d => d.trim()),
+          profileImage: formData.profileImage,
+          thumbnailUrl: formData.thumbnailUrl,
+          previewVideoUrl: formData.previewVideoUrl || null,
+          isPublished: formData.isPublished,
+          isNew: formData.isNew,
+          isTrending: formData.isTrending,
         }),
       });
 
@@ -65,15 +84,6 @@ export default function NewCharacterPage() {
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleExampleDialogueChange = (index: number, value: string) => {
-    const newDialogues = [...formData.exampleDialogues];
-    newDialogues[index] = value;
-    setFormData(prev => ({
-      ...prev,
-      exampleDialogues: newDialogues,
     }));
   };
 
@@ -207,16 +217,16 @@ export default function NewCharacterPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  성격 *
+                  설명 *
                 </label>
                 <textarea
-                  name="personality"
-                  value={formData.personality}
+                  name="description"
+                  value={formData.description}
                   onChange={handleChange}
                   required
                   rows={3}
                   className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B] resize-none"
-                  placeholder="밝고 활발한 성격으로..."
+                  placeholder="캐릭터 설명..."
                 />
               </div>
 
@@ -225,8 +235,8 @@ export default function NewCharacterPage() {
                   배경 스토리 *
                 </label>
                 <textarea
-                  name="background"
-                  value={formData.background}
+                  name="backstory"
+                  value={formData.backstory}
                   onChange={handleChange}
                   required
                   rows={4}
@@ -237,43 +247,83 @@ export default function NewCharacterPage() {
 
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  첫 인사 메시지 *
+                  음성 ID
                 </label>
-                <textarea
-                  name="greetingMessage"
-                  value={formData.greetingMessage}
+                <input
+                  type="text"
+                  name="voiceId"
+                  value={formData.voiceId}
                   onChange={handleChange}
-                  required
-                  rows={2}
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B] resize-none"
-                  placeholder="안녕하세요! 만나서 반가워요 😊"
+                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
+                  placeholder="default"
                 />
               </div>
             </div>
           </div>
 
-          {/* Example Dialogues */}
+          {/* Personality Traits */}
           <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
-            <h2 className="text-lg font-bold text-white mb-4">
-              대화 예시 (선택사항)
-            </h2>
+            <h2 className="text-lg font-bold text-white mb-4">성격 특성 (0-100)</h2>
             <div className="space-y-4">
-              {formData.exampleDialogues.map((dialogue, index) => (
-                <div key={index}>
-                  <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                    예시 {index + 1}
-                  </label>
-                  <textarea
-                    value={dialogue}
-                    onChange={(e) =>
-                      handleExampleDialogueChange(index, e.target.value)
-                    }
-                    rows={2}
-                    className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B] resize-none"
-                    placeholder="User: 안녕하세요!\nAssistant: 안녕하세요! 반가워요!"
-                  />
-                </div>
-              ))}
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  개방성 (Openness): {formData.personalityOpenness}
+                </label>
+                <input
+                  type="range"
+                  name="personalityOpenness"
+                  min="0"
+                  max="100"
+                  value={formData.personalityOpenness}
+                  onChange={handleChange}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  따뜻함 (Warmth): {formData.personalityWarmth}
+                </label>
+                <input
+                  type="range"
+                  name="personalityWarmth"
+                  min="0"
+                  max="100"
+                  value={formData.personalityWarmth}
+                  onChange={handleChange}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  장난기 (Playfulness): {formData.personalityPlayfulness}
+                </label>
+                <input
+                  type="range"
+                  name="personalityPlayfulness"
+                  min="0"
+                  max="100"
+                  value={formData.personalityPlayfulness}
+                  onChange={handleChange}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
+                  신비로움 (Mysteriousness): {formData.personalityMysteriousness}
+                </label>
+                <input
+                  type="range"
+                  name="personalityMysteriousness"
+                  min="0"
+                  max="100"
+                  value={formData.personalityMysteriousness}
+                  onChange={handleChange}
+                  className="w-full"
+                />
+              </div>
             </div>
           </div>
 
