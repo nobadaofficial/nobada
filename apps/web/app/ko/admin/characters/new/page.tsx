@@ -8,6 +8,7 @@ import { ArrowLeft, Save, Upload } from 'lucide-react';
 export default function NewCharacterPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     age: '',
@@ -85,6 +86,43 @@ export default function NewCharacterPage() {
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
     }));
+  };
+
+  const handleImageUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    fieldName: 'profileImage' | 'thumbnailUrl'
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(fieldName);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const data = await response.json();
+      setFormData(prev => ({
+        ...prev,
+        [fieldName]: data.url,
+      }));
+
+      alert('이미지가 성공적으로 업로드되었습니다!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('이미지 업로드에 실패했습니다.');
+    } finally {
+      setUploadingImage(null);
+    }
   };
 
   return (
@@ -183,30 +221,84 @@ export default function NewCharacterPage() {
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  프로필 이미지 URL
+                  프로필 이미지 *
                 </label>
-                <input
-                  type="url"
-                  name="profileImage"
-                  value={formData.profileImage}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
-                  placeholder="https://..."
-                />
+                <div className="space-y-2">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                    onChange={(e) => handleImageUpload(e, 'profileImage')}
+                    disabled={uploadingImage === 'profileImage'}
+                    className="hidden"
+                    id="profileImage"
+                  />
+                  <label
+                    htmlFor="profileImage"
+                    className={`flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                      uploadingImage === 'profileImage'
+                        ? 'border-[#9CA3AF] bg-[#2A2A2A] cursor-not-allowed'
+                        : 'border-[#4A4A4A] hover:border-[#FF6B6B] hover:bg-[#1A1A1A]'
+                    }`}
+                  >
+                    <Upload className="w-5 h-5 text-[#9CA3AF]" />
+                    <span className="text-[#9CA3AF]">
+                      {uploadingImage === 'profileImage' ? '업로드 중...' : '이미지 선택'}
+                    </span>
+                  </label>
+                  {formData.profileImage && (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={formData.profileImage}
+                        alt="Profile preview"
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <p className="text-sm text-[#9CA3AF] truncate flex-1">
+                        {formData.profileImage}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-[#9CA3AF] mb-2">
-                  썸네일 이미지 URL
+                  썸네일 이미지 *
                 </label>
-                <input
-                  type="url"
-                  name="thumbnailUrl"
-                  value={formData.thumbnailUrl}
-                  onChange={handleChange}
-                  className="w-full px-4 py-2 bg-[#0A0A0A] border border-[#2A2A2A] rounded-lg text-white focus:outline-none focus:border-[#FF6B6B]"
-                  placeholder="https://..."
-                />
+                <div className="space-y-2">
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+                    onChange={(e) => handleImageUpload(e, 'thumbnailUrl')}
+                    disabled={uploadingImage === 'thumbnailUrl'}
+                    className="hidden"
+                    id="thumbnailUrl"
+                  />
+                  <label
+                    htmlFor="thumbnailUrl"
+                    className={`flex items-center justify-center gap-2 px-4 py-2 border-2 border-dashed rounded-lg cursor-pointer transition-colors ${
+                      uploadingImage === 'thumbnailUrl'
+                        ? 'border-[#9CA3AF] bg-[#2A2A2A] cursor-not-allowed'
+                        : 'border-[#4A4A4A] hover:border-[#FF6B6B] hover:bg-[#1A1A1A]'
+                    }`}
+                  >
+                    <Upload className="w-5 h-5 text-[#9CA3AF]" />
+                    <span className="text-[#9CA3AF]">
+                      {uploadingImage === 'thumbnailUrl' ? '업로드 중...' : '이미지 선택'}
+                    </span>
+                  </label>
+                  {formData.thumbnailUrl && (
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={formData.thumbnailUrl}
+                        alt="Thumbnail preview"
+                        className="w-20 h-20 object-cover rounded-lg"
+                      />
+                      <p className="text-sm text-[#9CA3AF] truncate flex-1">
+                        {formData.thumbnailUrl}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
