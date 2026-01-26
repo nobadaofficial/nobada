@@ -123,90 +123,92 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-[#0A0A0A]">
       {/* Header */}
       <div className="bg-[#1A1A1A] border-b border-[#2A2A2A]">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#FF6B6B] rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">N</span>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#FF6B6B] rounded-lg flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-lg sm:text-xl">N</span>
             </div>
             <div>
-              <h1 className="text-white font-bold text-xl">Nobada Admin</h1>
-              <p className="text-[#9CA3AF] text-sm">관리자 대시보드</p>
+              <h1 className="text-white font-bold text-base sm:text-xl">Nobada Admin</h1>
+              <p className="text-[#9CA3AF] text-xs sm:text-sm">관리자 대시보드</p>
             </div>
           </div>
 
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 bg-[#2A2A2A] text-white rounded-lg hover:bg-[#3A3A3A] transition-colors"
+            className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#2A2A2A] text-white rounded-lg hover:bg-[#3A3A3A] transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            <span>로그아웃</span>
+            <span className="hidden sm:inline">로그아웃</span>
           </button>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="max-w-7xl mx-auto px-6 py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
+          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[#9CA3AF]">전체 캐릭터</span>
-              <Users className="w-5 h-5 text-[#FF6B6B]" />
+              <span className="text-sm sm:text-base text-[#9CA3AF]">전체 캐릭터</span>
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#FF6B6B]" />
             </div>
-            <p className="text-3xl font-bold text-white">{stats.totalCharacters}</p>
-            <p className="text-sm text-[#9CA3AF] mt-1">
+            <p className="text-2xl sm:text-3xl font-bold text-white">{stats.totalCharacters}</p>
+            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-1">
               활성: {stats.activeCharacters}
             </p>
           </div>
 
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[#9CA3AF]">전체 대화</span>
-              <MessageSquare className="w-5 h-5 text-[#4ADE80]" />
+              <span className="text-sm sm:text-base text-[#9CA3AF]">전체 대화</span>
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-[#4ADE80]" />
             </div>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-white">
               {stats.totalChats.toLocaleString()}
             </p>
-            <p className="text-sm text-[#9CA3AF] mt-1">누적 대화 수</p>
+            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-1">누적 대화 수</p>
           </div>
 
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[#9CA3AF]">전체 사용자</span>
-              <Users className="w-5 h-5 text-[#60A5FA]" />
+              <span className="text-sm sm:text-base text-[#9CA3AF]">전체 사용자</span>
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-[#60A5FA]" />
             </div>
-            <p className="text-3xl font-bold text-white">-</p>
-            <p className="text-sm text-[#9CA3AF] mt-1">Coming soon</p>
+            <p className="text-2xl sm:text-3xl font-bold text-white">-</p>
+            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-1">Coming soon</p>
           </div>
 
-          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-6">
+          <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl p-4 sm:p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[#9CA3AF]">평균 평점</span>
-              <Star className="w-5 h-5 text-[#FBBF24]" />
+              <span className="text-sm sm:text-base text-[#9CA3AF]">평균 평점</span>
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 text-[#FBBF24]" />
             </div>
-            <p className="text-3xl font-bold text-white">
+            <p className="text-2xl sm:text-3xl font-bold text-white">
               {(
                 characters.reduce((sum, char) => sum + char.rating, 0) /
                   characters.length || 0
               ).toFixed(1)}
             </p>
-            <p className="text-sm text-[#9CA3AF] mt-1">전체 평균</p>
+            <p className="text-xs sm:text-sm text-[#9CA3AF] mt-1">전체 평균</p>
           </div>
         </div>
 
         {/* Characters Management */}
         <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-xl">
-          <div className="p-6 border-b border-[#2A2A2A] flex items-center justify-between">
-            <h2 className="text-xl font-bold text-white">캐릭터 관리</h2>
+          <div className="p-4 sm:p-6 border-b border-[#2A2A2A] flex items-center justify-between">
+            <h2 className="text-lg sm:text-xl font-bold text-white">캐릭터 관리</h2>
             <Link
               href="/ko/admin/characters/new"
-              className="flex items-center gap-2 px-4 py-2 bg-[#FF6B6B] text-white rounded-lg hover:bg-[#FF5252] transition-colors"
+              className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-[#FF6B6B] text-white rounded-lg hover:bg-[#FF5252] transition-colors text-sm sm:text-base"
             >
               <Plus className="w-4 h-4" />
-              <span>새 캐릭터 추가</span>
+              <span className="hidden xs:inline">새 캐릭터 추가</span>
+              <span className="xs:hidden">추가</span>
             </Link>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Desktop Table View */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#2A2A2A]">
@@ -338,6 +340,101 @@ export default function AdminDashboardPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile Card View */}
+          <div className="md:hidden divide-y divide-[#2A2A2A]">
+            {characters.map((character) => (
+              <div key={character.id} className="p-4">
+                <div className="flex gap-3 mb-3">
+                  <Image
+                    src={character.thumbnailUrl}
+                    alt={character.name}
+                    width={64}
+                    height={64}
+                    className="rounded-lg object-cover flex-shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-white font-medium mb-1">
+                      {character.name}
+                    </h3>
+                    <p className="text-sm text-[#9CA3AF] mb-2">
+                      {character.age}세 · {character.occupation}
+                    </p>
+                    <div className="flex flex-wrap gap-1">
+                      {character.tags.slice(0, 2).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2 py-1 bg-[#2A2A2A] text-[#9CA3AF] text-xs rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1 text-sm">
+                      <Star className="w-4 h-4 text-[#FBBF24]" />
+                      <span className="text-white">{character.rating}</span>
+                    </div>
+                    <div className="flex items-center gap-1 text-sm">
+                      <MessageSquare className="w-4 h-4 text-[#9CA3AF]" />
+                      <span className="text-[#9CA3AF]">{character.chatCount}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-1">
+                    <span
+                      className={`px-2 py-1 text-xs rounded ${
+                        character.isPublished
+                          ? 'bg-green-500/10 text-green-500'
+                          : 'bg-red-500/10 text-red-500'
+                      }`}
+                    >
+                      {character.isPublished ? '공개' : '비공개'}
+                    </span>
+                    {character.isTrending && (
+                      <span className="px-2 py-1 bg-[#FF6B6B]/10 text-[#FF6B6B] text-xs rounded">
+                        인기
+                      </span>
+                    )}
+                    {character.isNew && (
+                      <span className="px-2 py-1 bg-blue-500/10 text-blue-500 text-xs rounded">
+                        신규
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() =>
+                      handleTogglePublish(character.id, character.isPublished)
+                    }
+                    className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                      character.isPublished
+                        ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                        : 'bg-green-500/10 text-green-500 hover:bg-green-500/20'
+                    }`}
+                  >
+                    <Eye className="w-4 h-4" />
+                    <span className="text-sm">
+                      {character.isPublished ? '비공개' : '공개'}
+                    </span>
+                  </button>
+                  <Link
+                    href={`/ko/admin/characters/${character.id}`}
+                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-[#2A2A2A] text-white rounded-lg hover:bg-[#3A3A3A] transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                    <span className="text-sm">수정</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
