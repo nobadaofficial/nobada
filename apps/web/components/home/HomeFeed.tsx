@@ -5,6 +5,19 @@ import { useRouter } from 'next/navigation';
 import { CharacterClip, CharacterClipData } from './CharacterClip';
 import { Loader2 } from 'lucide-react';
 
+// Available video files in /public/videos/
+const VIDEO_FILES = [
+  '/videos/sample1_260126.mp4',
+  '/videos/sample2_260126.mp4',
+  '/videos/sample3_260126.mp4',
+  '/videos/sample4_260126.mp4',
+];
+
+// Get random video from the available videos
+function getRandomVideo(): string {
+  return VIDEO_FILES[Math.floor(Math.random() * VIDEO_FILES.length)];
+}
+
 interface HomeFeedProps {
   initialData?: {
     clips: CharacterClipData[];
@@ -45,7 +58,7 @@ export function HomeFeed({ initialData }: HomeFeedProps) {
             characterName: '서윤',
             characterAge: 24,
             characterOccupation: '바리스타',
-            videoUrl: '/videos/sample1_260126.mp4',
+            videoUrl: getRandomVideo(),
             thumbnailUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=600&fit=crop',
             description: '커피 향과 함께하는 따뜻한 일상을 나누고 싶어요',
             tags: ['로맨틱', '일상', '힐링'],
@@ -57,7 +70,7 @@ export function HomeFeed({ initialData }: HomeFeedProps) {
             characterName: '지민',
             characterAge: 26,
             characterOccupation: '요가 강사',
-            videoUrl: '/videos/sample1_260126.mp4',
+            videoUrl: getRandomVideo(),
             thumbnailUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=600&fit=crop',
             description: '몸과 마음의 균형을 함께 찾아가요',
             tags: ['스포티', '건강', '긍정적'],
@@ -69,7 +82,7 @@ export function HomeFeed({ initialData }: HomeFeedProps) {
             characterName: '하늘',
             characterAge: 22,
             characterOccupation: '대학생',
-            videoUrl: '/videos/sample1_260126.mp4',
+            videoUrl: getRandomVideo(),
             thumbnailUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=600&fit=crop',
             description: '꿈을 향해 달리는 청춘의 이야기',
             tags: ['로맨틱', '모험', '청춘'],

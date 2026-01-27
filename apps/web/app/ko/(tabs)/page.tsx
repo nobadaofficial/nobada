@@ -5,6 +5,19 @@ import { prisma } from '@/lib/prisma';
 // Force dynamic rendering to avoid build-time database access
 export const dynamic = 'force-dynamic';
 
+// Available video files in /public/videos/
+const VIDEO_FILES = [
+  '/videos/sample1_260126.mp4',
+  '/videos/sample2_260126.mp4',
+  '/videos/sample3_260126.mp4',
+  '/videos/sample4_260126.mp4',
+];
+
+// Get random video from the available videos
+function getRandomVideo(): string {
+  return VIDEO_FILES[Math.floor(Math.random() * VIDEO_FILES.length)];
+}
+
 async function getInitialClips(): Promise<{
   clips: CharacterClipData[];
   nextCursor: string | null;
@@ -49,8 +62,8 @@ async function getInitialClips(): Promise<{
     characterName: character.name,
     characterAge: character.age,
     characterOccupation: character.occupation,
-    // Use local video from /videos/ directory
-    videoUrl: character.previewVideoUrl || '/videos/sample1_260126.mp4',
+    // Use random video from /videos/ directory if previewVideoUrl is not set
+    videoUrl: character.previewVideoUrl || getRandomVideo(),
     thumbnailUrl: character.thumbnailUrl,
     description: character.description.substring(0, 100), // Limit description length
     tags: character.tags,
